@@ -246,7 +246,7 @@ namespace BTCPayServer.Controllers
                     }
 
                     string txId = paymentData.GetPaymentId();
-                    string? link = GetTransactionLink(paymentMethodId, txId);
+                    string? link = _transactionLinkProviders.GetTransactionLink(paymentMethodId, txId);
 
                     return new ViewPaymentRequestViewModel.PaymentRequestInvoicePayment
                     {
@@ -271,12 +271,6 @@ namespace BTCPayServer.Controllers
             vm.AdditionalData = PosDataParser.ParsePosData(receiptData);
 
             return View(print ? "InvoiceReceiptPrint" : "InvoiceReceipt", vm);
-        }
-
-        private string? GetTransactionLink(PaymentMethodId paymentMethodId, string txId)
-        {
-            var network = _NetworkProvider.GetNetwork(paymentMethodId.CryptoCode);
-            return network == null ? null : paymentMethodId.PaymentType.GetTransactionLink(network, txId);
         }
 
         [HttpGet("invoices/{invoiceId}/refund")]

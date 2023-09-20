@@ -20,6 +20,7 @@ namespace BTCPayServer.PaymentRequest
         private readonly BTCPayNetworkProvider _BtcPayNetworkProvider;
         private readonly InvoiceRepository _invoiceRepository;
         private readonly CurrencyNameTable _currencies;
+        private readonly TransactionLinkProviders _transactionLinkProviders;
         private readonly DisplayFormatter _displayFormatter;
 
         public PaymentRequestService(
@@ -27,12 +28,14 @@ namespace BTCPayServer.PaymentRequest
             BTCPayNetworkProvider btcPayNetworkProvider,
             InvoiceRepository invoiceRepository,
             DisplayFormatter displayFormatter,
-            CurrencyNameTable currencies)
+            CurrencyNameTable currencies,
+            TransactionLinkProviders transactionLinkProviders)
         {
             _PaymentRequestRepository = paymentRequestRepository;
             _BtcPayNetworkProvider = btcPayNetworkProvider;
             _invoiceRepository = invoiceRepository;
             _currencies = currencies;
+            _transactionLinkProviders = transactionLinkProviders;
             _displayFormatter = displayFormatter;
         }
 
@@ -128,7 +131,7 @@ namespace BTCPayServer.PaymentRequest
                             }
 
                             string txId = paymentData.GetPaymentId();
-                            string link = GetTransactionLink(paymentMethodId, txId);
+                            string link = _transactionLinkProviders.GetTransactionLink(paymentMethodId, txId);
 
                             return new ViewPaymentRequestViewModel.PaymentRequestInvoicePayment
                             {
@@ -164,14 +167,6 @@ namespace BTCPayServer.PaymentRequest
                 })
                 .Where(invoice => invoice != null))
             };
-        }
-
-        private string GetTransactionLink(PaymentMethodId paymentMethodId, string txId)
-        {
-            var network = _BtcPayNetworkProvider.GetNetwork(paymentMethodId.CryptoCode);
-            if (network == null)
-                return null;
-            return paymentMethodId.PaymentType.GetTransactionLink(network, txId);
         }
     }
 }

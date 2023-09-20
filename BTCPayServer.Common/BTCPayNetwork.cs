@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using BTCPayServer.Common;
+using Microsoft.Extensions.DependencyInjection;
 using NBitcoin;
 using NBXplorer;
 using NBXplorer.Models;

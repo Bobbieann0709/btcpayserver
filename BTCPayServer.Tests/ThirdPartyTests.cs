@@ -278,7 +278,7 @@ retry:
         [Fact()]
         public void CanSolveTheDogesRatesOnKraken()
         {
-            var provider = new BTCPayNetworkProvider(ChainName.Mainnet);
+            var provider = CreateNetworkProvider(ChainName.Mainnet);
             var factory = FastTests.CreateBTCPayRateFactory();
             var fetcher = new RateFetcher(factory);
 
@@ -296,7 +296,7 @@ retry:
         {
             var factory = FastTests.CreateBTCPayRateFactory();
             var fetcher = new RateFetcher(factory);
-            var provider = new BTCPayNetworkProvider(ChainName.Mainnet);
+            var provider = CreateNetworkProvider(ChainName.Mainnet);
             var b = new StoreBlob();
             foreach (var k in StoreBlob.RecommendedExchanges)
             {
@@ -317,7 +317,7 @@ retry:
         public async Task CanGetRateCryptoCurrenciesByDefault()
         {
             using var cts = new CancellationTokenSource(60_000);
-            var provider = new BTCPayNetworkProvider(ChainName.Mainnet);
+            var provider = CreateNetworkProvider(ChainName.Mainnet);
             var factory = FastTests.CreateBTCPayRateFactory();
             var fetcher = new RateFetcher(factory);
             var pairs =
